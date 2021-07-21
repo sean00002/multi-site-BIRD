@@ -82,7 +82,7 @@
 4. `BIRD`
     - published single-site BIRD model and its accessories.
 5. `cmdstan-2.27.0`
-    - cmdStan version for this project.
+    - cmdStan for this project.
 6. `JABS`
     - JABS algorithm to control FDR, including simplified ASE model and its simulation accessories. 
 7. `P_simulation`
