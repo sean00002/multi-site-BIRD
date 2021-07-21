@@ -64,8 +64,8 @@
     - BIRD model breakdown, to simply infer `q` from `qi`
 
 ## cmdStan: Other accessory files
-1. `data_simulator_together.ipynb`
-    - Used to simulate data 
+1. `data_simulator_together.ipynb` 
+    - Used to simulate data (__`Required_Python_Packages` needed__)
         
         a. The data of all variants to have same simulated `theta`(usually `theta=2`). To investigate the bias of different algorithm. 
         
