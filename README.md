@@ -66,9 +66,10 @@
 ## cmdStan: Other accessory files
 1. `data_simulator_together.ipynb` 
     - Used to simulate data (__`Required_Python_Packages` needed__)
+    - ==Please see in the notebook for details of model version control and input control.== 
         
         a. The data of all variants to have same simulated `theta`(usually `theta=2`). To investigate the bias of different algorithm. 
-        
+      
         b. The data of small percentage of regulatory variants(usually `theta=2`) and rest of null variants(`theta=1`). To investigate the accuracy of the model and algorithm. 
 2. `sim-equal.R`
     - Used in `data_simulator_together.ipynb` to simulate data. 
@@ -76,6 +77,7 @@
     - Used to run different models in different algorithms(MCMC or VI in Stan)
     - Used to plot distribution of all variants `theta` posterior medians. (Use data from __1a__)
     - Used to plot auc_roc (Need to use data from __1b__)
+    - ==Please see the details of model version control and inputs control in the notebook==
 
 ## cmdStan: Other accessory directories 
 1. `STANINPUTS`
