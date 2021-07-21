@@ -95,7 +95,12 @@
 7. `P_simulation`
     - simulation to investigate `p`'s effect on logit transformation. 
 
+## RStan (MCMC)
 
+## RJAGS (MCMC)
 
+## Tensorflow-probability (Variational Inference)
+
+## Pyro (Variational Inference)
 
 
