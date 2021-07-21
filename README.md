@@ -9,20 +9,24 @@
 4. `multiple2_merge_function_new.stan`
     - Modification: Use `theta` as deterministic parameter instead of `q`
     ```
+    ...
     transformed parameters {
         real<lower=0> theta[N_VARIANTS];
         for(j in 1:N_VARIANTS)
             theta[j] = (q[j]/p[j])/((1-q[j])/(1-p[j]));
     }
+    ...
     ```
 5. `multiple2_merge_function_new2.stan`
     - Modification: Use `p` as deterministic parameter instead of `q`
     ```
+    ...
     transformed parameters { 
         real<lower=0,upper=1> p[N_VARIANTS];
         for(j in 1:N_VARIANTS)
             p[j]= q[j]/(theta[j]-theta[j]*q[j]+q[j]);
     }
+    ...
     ```
 6. `multiple2_merge_function_new3.stan`
     - Modification: Give `theta` a fixed prior. 
@@ -32,7 +36,11 @@
 7. `multiple2_merge_function_new3.stan`
     - Modification: Give `theta` a fixed prior. 
     ```
-     theta[j] ~ normal(1,1);
+    model {
+    ...
+    theta[j] ~ normal(1,1);
+    ...
+    }
     ```
 8. `multiple2_merge_function_normal.stan`
     - Modification: Turn q into normal distribution through logit transformation
@@ -42,7 +50,12 @@
         for(j in 1:N_VARIANTS)
             q_logit[j]=logit((theta[j]*p[j])/(1.0-p[j]+theta[j]*p[j]));
     ...
+    model{
+    ...
     for(i in 1:N_RNA)
          qi[j,i] ~ betaModeConc(inv_logit(q_logit[j]),c1);
     ...
-}
+    }
+    ...
+    
+
