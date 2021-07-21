@@ -1,5 +1,5 @@
 # multi-site-BIRD
-## Introduction: Multi-site BIRD model and its other derived models.
+## cmdStan: Multi-site BIRD model and its other derived models.
 1. `multiple2.stan` 
     - The originla multi-site BIRD model 
 2. `functions.stan` 
