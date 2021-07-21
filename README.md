@@ -52,14 +52,13 @@
         for(j in 1:N_VARIANTS){
             for(i in 1:N_RNA){
                 qi[j,i] = inv_logit(qi_logit[j,i]);
+            }
         }
-    }
         real<lower=0> theta[N_VARIANTS];
         for(j in 1:N_VARIANTS){
             theta[j]=exp(theta_log[j]);
+        ...
    }
-
-    
-    ```
+   ```
 
 
