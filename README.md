@@ -65,7 +65,7 @@
 
 ## cmdStan: Input and Output Naming (__IMPORTANT!!__)
 1. `STANINPUTS/0.5_data_0.01_1000_read100.txt`
-    - This a human readable simulated input where `theta` is simulated as 0.5 for regulatory variants, `0.01` means there are 1 percent regulatory variants (when this number = 1.0, this means all of variants are regulatory variants), `1000` means there are 1000 variants in total, `read100` means 100 reads for DNA and 100/10=10 reads (10 is the number of RNA sites) for RNA. If there is something like `read5050`, this means there are 50 reads for DNA and 50 reads for each of RNA pair. 
+    - This a human readable simulated input where `theta` is simulated as 0.5 for regulatory variants, `0.01` means there are 1 percent regulatory variants (when this number = 1.0, this means all of variants are regulatory variants), `1000` means there are 1000 variants in total, `read100` means 100 reads for DNA and 100/10=10 reads (10 is the number of RNA sites) for each RNA pair. If there is something like `read5050`, this means there are 50 reads for DNA and 50 reads for each of RNA pair. 
 2. `STANINPUTS/0.5_data_0.01_1000_read100.txt.staninputs`
     - Stan readable inputs.
 3. `STANOUTPUTS/0.5_data_0.01_1000_read100.txt.staninputs.stanoutputs`
