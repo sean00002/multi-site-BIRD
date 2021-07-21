@@ -17,13 +17,13 @@
 ```
 5. `multiple2_merge_function_new2.stan`
     - Modified model: Use `p` as deterministic parameter instead of `q`
-```
-transformed parameters { 
-   real<lower=0,upper=1> p[N_VARIANTS];
-   for(j in 1:N_VARIANTS)
-      p[j]= q[j]/(theta[j]-theta[j]*q[j]+q[j]);
-}
-```
+    ```
+    transformed parameters { 
+     real<lower=0,upper=1> p[N_VARIANTS];
+     for(j in 1:N_VARIANTS)
+         p[j]= q[j]/(theta[j]-theta[j]*q[j]+q[j]);
+    }
+    ```
 6. `multiple2_merge_function_new3.stan`
     - Modified model: Give `theta` a fixed prior. 
 ```
