@@ -68,8 +68,8 @@
     - This a human readable simulated input where `theta` is simulated as 0.5 for regulatory variants, `0.01` means there are 1 percent regulatory variants (when this number = 1.0, this means all of variants are regulatory variants), `1000` means there are 1000 variants in total, `read100` means 100 reads for DNA and 100/10=10 reads (10 is the number of RNA sites) for each RNA pair. If there is something like `read5050`, this means there are 50 reads for DNA and 50 reads for each of RNA pair. 
 2. `STANINPUTS/0.5_data_0.01_1000_read100.txt.staninputs`
     - Stan readable inputs.
-3. `STANOUTPUTS/0.5_data_0.01_1000_read100.txt.staninputs.stanoutputs`
-    - Stan outputs for this input. 
+3. `STANOUTPUTS/multiple2_merge_function_new_VI_0.5_data_0.01_1000_read100.txt.staninputs.stanoutputs`
+    - Stan outputs for this input. `multiple2_merge_function_new` is the version name of the model and `VI` is the algorithm (variational inference) or it could be `MCMC`(NUTS). 
 
 ## cmdStan: Other accessory files
 1. `data_simulator_together.ipynb` 
@@ -104,6 +104,15 @@
     - simulation to investigate `p`'s effect on logit transformation. 
 
 ## RStan (MCMC)
+1. `rstan.Rmd`
+    - Use RStan to run 4 chains independently in order to compare with RJAGS.
+    - 6 different datasets for `multiple2_merge_function.stan` model. 
+        a. `model_30`:1000 variants with `theta=2`, DNA depth each pair = RNA depth each pair = 30 (To test bias)
+        b. `model_50`:1000 variants with `theta=2`, DNA depth each pair = RNA depth each pair = 50 (To test bias)
+        c. `model_001_30`: 1000 variants, 1 percent are regulatory with `theta=2`, 99 percent are null variants with `theta=1`, DNA depth each pair = RNA depth each pair = 30 (To test accuracy)
+        d. `model_001_50`: 1000 variants, 1 percent are regulatory with `theta=2`, 99 percent are null variants with `theta=1`, DNA depth each pair = RNA depth each pair = 50 (To test accuracy)
+        e. `model_005_30`: 1000 variants, 5 percent are regulatory with `theta=2`, 95 percent are null variants with `theta=1`, DNA depth each pair = RNA depth each pair = 30 (To test accuracy)
+        f. `model_005_50`: 1000 variants, 5 percent are regulatory with `theta=2`, 95 percent are null variants with `theta=1`, DNA depth each pair = RNA depth each pair = 50 (To test accuracy)
 
 ## RJAGS (MCMC)
 
