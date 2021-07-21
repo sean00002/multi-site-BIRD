@@ -98,13 +98,11 @@
     - To store all Stan's outputs 
 3. `Required_Python_Packages`
     - All __required__ customized packages for this project. 
-4. `BIRD`
-    - published single-site BIRD model and its accessories.
-5. `cmdstan-2.27.0`
+4. `cmdstan-2.27.0`
     - cmdStan for this project.
-6. `JABS`
+5. `JABS`
     - JABS algorithm to control FDR, including simplified ASE model and its simulation accessories. 
-7. `P_simulation`
+6. `P_simulation`
     - simulation to investigate `p`'s effect on logit transformation. 
 
 ## RStan (MCMC)
