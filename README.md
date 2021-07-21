@@ -107,17 +107,17 @@
 1. `rstan.Rmd`
     - Use RStan to run 4 chains independently in order to compare with RJAGS.
     - 6 different datasets for `multiple2_merge_function.stan` model. 
-        a. `model_30`:1000 variants with `theta=2`, DNA depth each pair = RNA depth each pair = 30 (To test bias)
+        a. `stan_model_30`:1000 variants with `theta=2`, DNA depth each pair = RNA depth each pair = 30 (To test bias)
         
-        b. `model_50`:1000 variants with `theta=2`, DNA depth each pair = RNA depth each pair = 50 (To test bias)
+        b. `stan_model_50`:1000 variants with `theta=2`, DNA depth each pair = RNA depth each pair = 50 (To test bias)
         
-        c. `model_001_30`: 1000 variants, 1 percent are regulatory with `theta=2`, 99 percent are null variants with `theta=1`, DNA depth each pair = RNA depth each pair = 30 (To test accuracy)
+        c. `stan_model_001_30`: 1000 variants, 1 percent are regulatory with `theta=2`, 99 percent are null variants with `theta=1`, DNA depth each pair = RNA depth each pair = 30 (To test accuracy)
         
-        d. `model_001_50`: 1000 variants, 1 percent are regulatory with `theta=2`, 99 percent are null variants with `theta=1`, DNA depth each pair = RNA depth each pair = 50 (To test accuracy)
+        d. `stan_model_001_50`: 1000 variants, 1 percent are regulatory with `theta=2`, 99 percent are null variants with `theta=1`, DNA depth each pair = RNA depth each pair = 50 (To test accuracy)
         
-        e. `model_005_30`: 1000 variants, 5 percent are regulatory with `theta=2`, 95 percent are null variants with `theta=1`, DNA depth each pair = RNA depth each pair = 30 (To test accuracy)
+        e. `stan_model_005_30`: 1000 variants, 5 percent are regulatory with `theta=2`, 95 percent are null variants with `theta=1`, DNA depth each pair = RNA depth each pair = 30 (To test accuracy)
         
-        f. `model_005_50`: 1000 variants, 5 percent are regulatory with `theta=2`, 95 percent are null variants with `theta=1`, DNA depth each pair = RNA depth each pair = 50 (To test accuracy)
+        f. `stan_model_005_50`: 1000 variants, 5 percent are regulatory with `theta=2`, 95 percent are null variants with `theta=1`, DNA depth each pair = RNA depth each pair = 50 (To test accuracy)
 
 ## RJAGS (MCMC)
 1. `JAGS/rjags.Rmd`
