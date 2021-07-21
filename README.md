@@ -24,3 +24,8 @@ transformed parameters {
       p[j]= q[j]/(theta[j]-theta[j]*q[j]+q[j]);
 }
 ```
+6. `multiple2_merge_function_new3.stan`
+    - Modified model: Give `theta` a fixed prior. 
+```
+ theta[j] ~ normal(1,1);
+```
