@@ -34,41 +34,32 @@
     }
     ```
     
-7. `multiple2_merge_function_normal.stan`
-    - Modification: Turn q into normal distribution through logit transformation
-    ```
-    transformed parameters { // ORDER MATTERS!
-        real q_logit[N_VARIANTS]; // alt allele freq in RNA
-        for(j in 1:N_VARIANTS)
-            q_logit[j]=logit((theta[j]*p[j])/(1.0-p[j]+theta[j]*p[j]));
-    ...
-    model{
-    ...
-    for(i in 1:N_RNA)
-         qi[j,i] ~ betaModeConc(inv_logit(q_logit[j]),c1);
-    ...
-    }
-    ```
-8. `multiple2_merge_function_normal2.stan`
-    - Modification: Turn q into normal distribution through logit transformation
-    -               Turn p into normal distribution through logit transformation
+7. `multiple2_merge_function_normal3.stan`
+    - Modification: Turn `qi`,`p` and `theta` into normal distribution through logit and log transformation
     ```
     parameters {
-         real p_logit[N_VARIANTS];
-         ...
+    ...
+        real p_logit[N_VARIANTS];
+        real qi_logit[N_VARIANTS,N_RNA];
+        real theta_log[N_VARIANTS];
+    ...
     }
     transformed parameters { // ORDER MATTERS!
-        real q_logit[N_VARIANTS]; // alt allele freq in RNA
+        real<lower=0,upper=1> p[N_VARIANTS]; // untransformed p
         for(j in 1:N_VARIANTS)
-            q_logit[j]=logit((theta[j]*p[j])/(1.0-p[j]+theta[j]*p[j]));
-    ...
-    model{
-    ...
-    for(i in 1:N_RNA)
-         qi[j,i] ~ betaModeConc(inv_logit(q_logit[j]),c1);
-    for(i in 1:N_DNA)
-         a[j,i] ~ binomial(a[j,i]+b[j,i],inv_logit(p_logit[j]));
-    ...
+            p[j]=inv_logit(p_logit[j]);
+        real<lower=0,upper=1> qi[N_VARIANTS,N_RNA]; //untransformed qi
+        for(j in 1:N_VARIANTS){
+            for(i in 1:N_RNA){
+                qi[j,i] = inv_logit(qi_logit[j,i]);
+        }
     }
+        real<lower=0> theta[N_VARIANTS];
+        for(j in 1:N_VARIANTS){
+            theta[j]=exp(theta_log[j]);
+   }
+
+    
     ```
+
 
