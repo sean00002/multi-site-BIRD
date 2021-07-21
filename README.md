@@ -60,5 +60,11 @@
         ...
    }
    ```
+8. `qi_q.stan`
+    - BIRD model breakdown, to simply infer `q` from `qi`
+
+## cmdStan: Other accessory files
+
+
 
 
