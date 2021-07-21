@@ -86,6 +86,10 @@
     - Used to plot distribution of all variants `theta` posterior medians. (Use data from __1a__)
     - Used to plot auc_roc (Need to use data from __1b__)
     - __Please see the details of model version control and inputs control in the notebook__
+4. `compile.py`
+    - Used to compile Stan model in current directory. 
+    - `./compile.py xxx` (for xxx.stan)
+    - __IMPORTANT! make sure to edit the directories in `compile.py` to be the directories where your models are__.
 
 ## cmdStan: Other accessory directories 
 1. `STANINPUTS`
