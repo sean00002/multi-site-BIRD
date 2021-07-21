@@ -66,6 +66,7 @@
 ## cmdStan: Other accessory files
 1. `data_simulator_together.ipynb`
     - Used to simulate data 
+        
         a. The data of all variants to have same simulated `theta`(usually `theta=2`). To investigate the bias of different algorithm. 
         
         b. The data of small percentage of regulatory variants(usually `theta=2`) and rest of null variants(`theta=1`). To investigate the accuracy of the model and algorithm. 
