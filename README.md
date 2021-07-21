@@ -63,6 +63,12 @@
 8. `qi_q.stan`
     - BIRD model breakdown, to simply infer `q` from `qi`
 
+## cmdStan: Other accessory files
+1. `data_simulator_together.ipynb`
+    - Used to simulate data 
+        1. The data of all variants to have same simulated `theta`. 
+
+
 ## cmdStan: Other accessory directories 
 1. `STANINPUTS`
     - To store all simulated inputs including the visible inputs and inputs for Stan. 
@@ -71,8 +77,15 @@
 3. `Required_Python_Packages`
     - All __required__ customized packages for this project. 
 4. `BIRD`
-    - published single-site BIRD model
-5. 
+    - published single-site BIRD model and its accessories.
+5. `cmdstan-2.27.0`
+    - cmdStan version for this project.
+6. `JABS`
+    - JABS algorithm to control FDR, including simplified ASE model and its simulation accessories. 
+7. `P_simulation`
+    - simulation to investigate `p`'s effect on logit transformation. 
+
+
 
 
 
