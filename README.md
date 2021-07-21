@@ -108,16 +108,40 @@
     - Use RStan to run 4 chains independently in order to compare with RJAGS.
     - 6 different datasets for `multiple2_merge_function.stan` model. 
         a. `model_30`:1000 variants with `theta=2`, DNA depth each pair = RNA depth each pair = 30 (To test bias)
+        
         b. `model_50`:1000 variants with `theta=2`, DNA depth each pair = RNA depth each pair = 50 (To test bias)
+        
         c. `model_001_30`: 1000 variants, 1 percent are regulatory with `theta=2`, 99 percent are null variants with `theta=1`, DNA depth each pair = RNA depth each pair = 30 (To test accuracy)
+        
         d. `model_001_50`: 1000 variants, 1 percent are regulatory with `theta=2`, 99 percent are null variants with `theta=1`, DNA depth each pair = RNA depth each pair = 50 (To test accuracy)
+        
         e. `model_005_30`: 1000 variants, 5 percent are regulatory with `theta=2`, 95 percent are null variants with `theta=1`, DNA depth each pair = RNA depth each pair = 30 (To test accuracy)
+        
         f. `model_005_50`: 1000 variants, 5 percent are regulatory with `theta=2`, 95 percent are null variants with `theta=1`, DNA depth each pair = RNA depth each pair = 50 (To test accuracy)
 
 ## RJAGS (MCMC)
+1. `JAGS/rjags.Rmd`
+    - Use RJAGS to run 4 chains independently in order to compare with RStan.
+    - 6 different datasets for `multiple2_merge_function.stan` model. 
+        a. `model_30`:1000 variants with `theta=2`, DNA depth each pair = RNA depth each pair = 30 (To test bias)
+        
+        b. `model_50`:1000 variants with `theta=2`, DNA depth each pair = RNA depth each pair = 50 (To test bias)
+        
+        c. `model_001_30`: 1000 variants, 1 percent are regulatory with `theta=2`, 99 percent are null variants with `theta=1`, DNA depth each pair = RNA depth each pair = 30 (To test accuracy)
+        
+        d. `model_001_50`: 1000 variants, 1 percent are regulatory with `theta=2`, 99 percent are null variants with `theta=1`, DNA depth each pair = RNA depth each pair = 50 (To test accuracy)
+        
+        e. `model_005_30`: 1000 variants, 5 percent are regulatory with `theta=2`, 95 percent are null variants with `theta=1`, DNA depth each pair = RNA depth each pair = 30 (To test accuracy)
+        
+        f. `model_005_50`: 1000 variants, 5 percent are regulatory with `theta=2`, 95 percent are null variants with `theta=1`, DNA depth each pair = RNA depth each pair = 50 (To test accuracy)
+
 
 ## Tensorflow-probability (Variational Inference)
+1. `simple_VI_tfp.ipynb`
+2. The variational inference feature is only in `tfp-nightly` or the newest tensorflow-probability version (0.13.0+).
+3. check https://www.tensorflow.org/probability/examples/TFP_Release_Notebook_0_13_0 or https://www.tensorflow.org/probability/examples/Variational_Inference_and_Joint_Distributions or http://hyperion.usc.edu/UQ-SummerSchool/pres/Dillon.pdf for further variational inference tutorial in TFP. 
 
 ## Pyro (Variational Inference)
-
+1. `simple_VI_pyro.ipynb`
+2. check http://pyro.ai/examples/svi_part_i.html for futher stochastic variational inference tutorial in Pyro.
 
