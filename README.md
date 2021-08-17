@@ -3,7 +3,7 @@
 ## Requirments:
 1. Please download and extract STANINPUTS.tar.gz and STANOUTPUTS.tar.gz from https://prodduke-my.sharepoint.com/:u:/g/personal/sl548_duke_edu/ET0c_cDRkzVDnT7vFbTgwQ0BC4fq9cNGR4WSI-fKhbaE4w?e=P03Tv9 and https://prodduke-my.sharepoint.com/:u:/g/personal/sl548_duke_edu/EXhZBSp7HwBHiofY9Xd3KlEBUWcZ9f_7G95aRlZKMBIQTQ?e=wHByU3. 
 2. Please download cmdstan-2.27.0 from https://github.com/stan-dev/cmdstan/releases 
-
+Cancel changes
 ## cmdStan: Multi-site BIRD model and its other derived models.
 1. `multiple2.stan` 
     - The originla multi-site BIRD model 
@@ -51,7 +51,7 @@
         real<lower=0,upper=1> p[N_VARIANTS]; // untransformed p
         for(j in 1:N_VARIANTS)
             p[j]=inv_logit(p_logit[j]);
-        ...
+   ...
    }
    ```
     
@@ -73,6 +73,7 @@
         ...
    }
    ```    
+   
 9. `multiple2_merge_function_normal_theta.stan`
     - Modification: Turn `theta` into normal distribution through log transformation. 
     ```
@@ -86,22 +87,22 @@
         for(j in 1:N_VARIANTS){
             theta[j]=exp(theta_log[j]);
     ...
-   }
-   ```
-10.`multiple2_merge_function_normal_p_qi.stan`
-    - Combine 7. and 8. together. 
-  
-11.`multiple2_merge_function_normal3.stan`
-    - Modification: Turn `qi`,`p` and `theta` into normal distribution through logit and log transformation. Combine 7,8,9 together. 
-    ```
-    parameters {
-    ...
-        real p_logit[N_VARIANTS];
-        real qi_logit[N_VARIANTS,N_RNA];
-        real theta_log[N_VARIANTS];
-    ...
     }
-    transformed parameters { // ORDER MATTERS!
+    ```
+10. `multiple2_merge_function_normal_p_qi.stan`
+     - Combine 7. and 8. together. 
+  
+11. `multiple2_merge_function_normal3.stan`
+     - Modification: Turn `qi`,`p` and `theta` into normal distribution through logit and log transformation. Combine 7,8,9 together. 
+     ```
+     parameters {
+     ...
+         real p_logit[N_VARIANTS];
+         real qi_logit[N_VARIANTS,N_RNA];
+         real theta_log[N_VARIANTS];
+     ...
+     }
+     transformed parameters { // ORDER MATTERS!
         real<lower=0,upper=1> p[N_VARIANTS]; // untransformed p
         for(j in 1:N_VARIANTS)
             p[j]=inv_logit(p_logit[j]);
@@ -114,10 +115,11 @@
         real<lower=0> theta[N_VARIANTS];
         for(j in 1:N_VARIANTS){
             theta[j]=exp(theta_log[j]);
-        ...
-   }
-   ```
-8. `qi_q.stan`
+     ...
+     }
+     ```   
+   
+12. `qi_q.stan`
     - BIRD model breakdown, to simply infer `q` from `qi`
 
 ## cmdStan: Input and Output Naming (__IMPORTANT!!__)
