@@ -1,0 +1,233 @@
+---
+title: "rstan"
+output: html_document
+---
+
+#Install Library 
+```{r}
+remove.packages("rstan")
+if (file.exists(".RData")) file.remove(".RData")
+
+Sys.setenv(DOWNLOAD_STATIC_LIBV8 = 1) # only necessary for Linux without the nodejs library / headers
+install.packages("rstan", repos = "https://cloud.r-project.org/", dependencies = TRUE)
+
+example(stan_model, package = "rstan", run.dontrun = TRUE)
+```
+#Library Options
+```{r}
+library("rstan")
+library(matrixStats)
+library(ROCit)
+options(mc.cores = parallel::detectCores())
+```
+
+#Data
+```{r}
+rawdata <- read.csv("/Users/sean00002/Dropbox/PhD/Andrew_Rotation/STANINPUTS/2_data_0.01_1000_read5050.txt", sep = "\t", header = F)
+
+
+bird_data_001_50 <- list(v = rawdata$V1, a = matrix(rawdata$V7),aa = matrix(rawdata$V7), b = matrix(rawdata$V6), k = cbind(rawdata$V10, rawdata$V12,rawdata$V14,rawdata$V16,rawdata$V18,rawdata$V20,rawdata$V22,rawdata$V24,rawdata$V26,rawdata$V28),kk  = cbind(rawdata$V10, rawdata$V12,rawdata$V14,rawdata$V16,rawdata$V18,rawdata$V20,rawdata$V22,rawdata$V24,rawdata$V26,rawdata$V28), m = cbind(rawdata$V9, rawdata$V11,rawdata$V13,rawdata$V15,rawdata$V17,rawdata$V19,rawdata$V21,rawdata$V23,rawdata$V25,rawdata$V27), N_VARIANTS = nrow(rawdata), N_RNA=10,N_DNA=1)
+
+rawdata <- read.csv("/Users/sean00002/Dropbox/PhD/Andrew_Rotation/STANINPUTS/2_data_0.01_1000_read3030.txt", sep = "\t", header = F)
+
+bird_data_001_30 <- list(v = rawdata$V1, a = matrix(rawdata$V7),aa = matrix(rawdata$V7), b = matrix(rawdata$V6), k = cbind(rawdata$V10, rawdata$V12,rawdata$V14,rawdata$V16,rawdata$V18,rawdata$V20,rawdata$V22,rawdata$V24,rawdata$V26,rawdata$V28),kk  = cbind(rawdata$V10, rawdata$V12,rawdata$V14,rawdata$V16,rawdata$V18,rawdata$V20,rawdata$V22,rawdata$V24,rawdata$V26,rawdata$V28), m = cbind(rawdata$V9, rawdata$V11,rawdata$V13,rawdata$V15,rawdata$V17,rawdata$V19,rawdata$V21,rawdata$V23,rawdata$V25,rawdata$V27), N_VARIANTS = nrow(rawdata), N_RNA=10,N_DNA=1)
+
+rawdata <- read.csv("/Users/sean00002/Dropbox/PhD/Andrew_Rotation/STANINPUTS/2_data_0.05_1000_read5050.txt", sep = "\t", header = F)
+
+bird_data_005_50 <- list(v = rawdata$V1, a = matrix(rawdata$V7),aa = matrix(rawdata$V7), b = matrix(rawdata$V6), k = cbind(rawdata$V10, rawdata$V12,rawdata$V14,rawdata$V16,rawdata$V18,rawdata$V20,rawdata$V22,rawdata$V24,rawdata$V26,rawdata$V28),kk  = cbind(rawdata$V10, rawdata$V12,rawdata$V14,rawdata$V16,rawdata$V18,rawdata$V20,rawdata$V22,rawdata$V24,rawdata$V26,rawdata$V28), m = cbind(rawdata$V9, rawdata$V11,rawdata$V13,rawdata$V15,rawdata$V17,rawdata$V19,rawdata$V21,rawdata$V23,rawdata$V25,rawdata$V27), N_VARIANTS = nrow(rawdata), N_RNA=10,N_DNA=1)
+
+rawdata <- read.csv("/Users/sean00002/Dropbox/PhD/Andrew_Rotation/STANINPUTS/2_data_0.05_1000_read3030.txt", sep = "\t", header = F)
+
+bird_data_005_30 <- list(v = rawdata$V1, a = matrix(rawdata$V7),aa = matrix(rawdata$V7), b = matrix(rawdata$V6), k = cbind(rawdata$V10, rawdata$V12,rawdata$V14,rawdata$V16,rawdata$V18,rawdata$V20,rawdata$V22,rawdata$V24,rawdata$V26,rawdata$V28),kk  = cbind(rawdata$V10, rawdata$V12,rawdata$V14,rawdata$V16,rawdata$V18,rawdata$V20,rawdata$V22,rawdata$V24,rawdata$V26,rawdata$V28), m = cbind(rawdata$V9, rawdata$V11,rawdata$V13,rawdata$V15,rawdata$V17,rawdata$V19,rawdata$V21,rawdata$V23,rawdata$V25,rawdata$V27), N_VARIANTS = nrow(rawdata), N_RNA=10,N_DNA=1)
+
+rawdata <- read.csv("/Users/sean00002/Dropbox/PhD/Andrew_Rotation/STANINPUTS/2_data_1.0_1000_read3030.txt", sep = "\t", header = F)
+
+
+bird_data_30 <- list(v = rawdata$V1, a = matrix(rawdata$V7),aa = matrix(rawdata$V7), b = matrix(rawdata$V6), k = cbind(rawdata$V10, rawdata$V12,rawdata$V14,rawdata$V16,rawdata$V18,rawdata$V20,rawdata$V22,rawdata$V24,rawdata$V26,rawdata$V28),kk  = cbind(rawdata$V10, rawdata$V12,rawdata$V14,rawdata$V16,rawdata$V18,rawdata$V20,rawdata$V22,rawdata$V24,rawdata$V26,rawdata$V28), m = cbind(rawdata$V9, rawdata$V11,rawdata$V13,rawdata$V15,rawdata$V17,rawdata$V19,rawdata$V21,rawdata$V23,rawdata$V25,rawdata$V27), N_VARIANTS = nrow(rawdata), N_RNA=10,N_DNA=1)
+
+
+rawdata <- read.csv("/Users/sean00002/Dropbox/PhD/Andrew_Rotation/STANINPUTS/2_data_1.0_1000_read5050.txt", sep = "\t", header = F)
+
+bird_data_50 <- list(v = rawdata$V1, a = matrix(rawdata$V7),aa = matrix(rawdata$V7), b = matrix(rawdata$V6), k = cbind(rawdata$V10, rawdata$V12,rawdata$V14,rawdata$V16,rawdata$V18,rawdata$V20,rawdata$V22,rawdata$V24,rawdata$V26,rawdata$V28),kk  = cbind(rawdata$V10, rawdata$V12,rawdata$V14,rawdata$V16,rawdata$V18,rawdata$V20,rawdata$V22,rawdata$V24,rawdata$V26,rawdata$V28), m = cbind(rawdata$V9, rawdata$V11,rawdata$V13,rawdata$V15,rawdata$V17,rawdata$V19,rawdata$V21,rawdata$V23,rawdata$V25,rawdata$V27), N_VARIANTS = nrow(rawdata), N_RNA=10,N_DNA=1)
+```
+
+
+#Model 
+
+## stan_model_30
+```{r}
+ptm <- proc.time()
+stan_model_30 <- stan(file = "multiple2_merge_function.stan", data=bird_data_30,chains = 4,pars = "theta",verbose = F)
+proc.time() - ptm 
+
+get_elapsed_time(stan_model_30)
+```
+
+## stan_model_30 results
+```{r}
+medians = colMedians(as.matrix(stan_model_30,par="theta"))
+ggplot(data = as.data.frame(medians), aes(x = medians)) + geom_histogram(aes(y = ..density..)) + geom_density() + geom_vline(xintercept = median.default(medians))  + ggtitle(paste("median = ",median.default(medians)))
+```
+
+
+## stan_model_50
+```{r}
+ptm <- proc.time()
+stan_model_50 <- stan(file = "multiple2_merge_function.stan", data=bird_data_50,chains = 4,pars = "theta",verbose = F)
+proc.time() - ptm 
+
+get_elapsed_time(stan_model_50)
+```
+
+## stan_model_50 results
+```{r}
+medians = colMedians(as.matrix(stan_model_50, par=c("theta")))
+ggplot(data = as.data.frame(medians), aes(x = medians)) + geom_histogram(aes(y = ..density..)) + geom_density() + geom_vline(xintercept = median.default(medians))  + ggtitle(paste("median = ",median.default(medians)))
+```
+
+
+## stan_model_001_50
+```{r}
+ptm <- proc.time()
+stan_model_001_50 <- stan(file = "multiple2_merge_function.stan", data=bird_data_001_50,chains = 4,pars = "theta",verbose = F)
+proc.time() - ptm 
+
+get_elapsed_time(stan_model_001_50)
+```
+
+## stan_model_001_50 results
+```{r}
+mcmc = as.matrix(stan_model_001_50, par=c("theta"))
+
+pos = 10
+label = c(rep(1,pos), rep(0,1000-pos))
+
+p <- c()
+for (i in 1:1000){
+  preg <- sum(mcmc[,i] > 1)/4000
+  p <- append(p,preg)
+}
+
+ROCit_obj <- rocit(score=p,class=label,method = "empirical")
+plot(ROCit_obj)
+title(main = paste0("STAN:stan_model_001_50; ",summary(ROCit_obj)[4,]))
+```
+
+## stan_model_001_30
+```{r}
+ptm <- proc.time()
+stan_model_001_30 <- stan(file = "multiple2_merge_function.stan", data=bird_data_001_30,chains = 4,pars = "theta",verbose = F)
+proc.time() - ptm 
+
+get_elapsed_time(stan_model_001_30)
+```
+
+## stan_model_001_30 results
+```{r}
+mcmc = as.matrix(stan_model_001_30, par=c("theta"))
+
+pos = 10
+label = c(rep(1,pos), rep(0,1000-pos))
+
+p <- c()
+for (i in 1:1000){
+  preg <- sum(mcmc[,i] > 1)/4000
+  p <- append(p,preg)
+}
+
+ROCit_obj <- rocit(score=p,class=label,method = "empirical")
+plot(ROCit_obj)
+title(main = paste0("STAN:stan_model_001_30; ",summary(ROCit_obj)[4,]))
+```
+
+
+## stan_model_005_50
+```{r}
+ptm <- proc.time()
+stan_model_005_50 <- stan(file = "multiple2_merge_function.stan", data=bird_data_005_50,chains = 4,pars = "theta",verbose = F)
+proc.time() - ptm 
+
+get_elapsed_time(stan_model_005_50)
+```
+
+## stan_model_005_50 results
+```{r}
+mcmc = as.matrix(stan_model_005_50, par=c("theta"))
+
+pos = 50
+label = c(rep(1,pos), rep(0,1000-pos))
+
+p <- c()
+for (i in 1:1000){
+  preg <- sum(mcmc[,i] > 1)/4000
+  p <- append(p,preg)
+}
+
+ROCit_obj <- rocit(score=p,class=label,method = "empirical")
+plot(ROCit_obj)
+title(main = paste0("STAN:stan_model_005_50; ",summary(ROCit_obj)[4,]))
+```
+
+## stan_model_005_30
+```{r}
+ptm <- proc.time()
+stan_model_005_30 <- stan(file = "multiple2_merge_function.stan", data=bird_data_005_30,chains = 4,pars = "theta",verbose = F)
+proc.time() - ptm 
+
+get_elapsed_time(stan_model_005_30)
+```
+
+## stan_model_005_30 results
+```{r}
+mcmc = as.matrix(stan_model_005_30, par=c("theta"))
+
+pos = 50
+label = c(rep(1,pos), rep(0,1000-pos))
+
+p <- c()
+for (i in 1:1000){
+  preg <- sum(mcmc[,i] > 1)/4000
+  p <- append(p,preg)
+}
+
+ROCit_obj <- rocit(score=p,class=label,method = "empirical")
+plot(ROCit_obj)
+title(main = paste0("STAN:stan_model_005_30; ",summary(ROCit_obj)[4,]))
+```
+
+```{r}
+model <- c("model_30","model_50","model_001_30","model_001_50","model_005_30", "model_005_50")
+
+time <- c(177.949,131.707,143.255,140.624,171.156,149.774)
+
+jagsx <- as.data.frame(cbind(model,time))
+jagsx$chain <- "overall_JAGS"
+jagsx$time <- as.double(jagsx$time)
+
+stan<-as.data.frame(rbind(get_elapsed_time(stan_model_30),get_elapsed_time(stan_model_50),get_elapsed_time(stan_model_001_30),get_elapsed_time(stan_model_001_50),get_elapsed_time(stan_model_005_30),get_elapsed_time(stan_model_005_50)))
+
+stan$chain <- c("chain1_STAN","chain2_STAN","chain3_STAN","chain4_STAN")
+rownames(stan) <- NULL
+stan$model <- c(rep("model_30",4),rep("model_50",4),rep("model_001_30",4),rep("model_001_50",4),rep("model_005_30",4),rep("model_005_50",4))
+
+
+stan %<>%
+  mutate(time = warmup + sample) %>%
+  select(!c(sample,warmup)) %>%
+  rbind(jagsx) %>%
+  arrange(model)
+
+ggplot(stan, aes(x = model, y=time, fill = chain))+geom_bar(stat="identity", position=position_dodge())+
+  geom_text(aes(label=time), vjust=1.6, color="black",
+            position = position_dodge(0.9), size=3)+
+  scale_fill_brewer(palette="Blues")+
+  theme_minimal()
+
+
+```
+
+
+
+
+
+
