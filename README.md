@@ -39,8 +39,60 @@
     }
     ```
     
-7. `multiple2_merge_function_normal3.stan`
-    - Modification: Turn `qi`,`p` and `theta` into normal distribution through logit and log transformation
+7. `multiple2_merge_function_normal_p.stan`
+    - Modification: Turn `p` into normal distribution through logit transformation. 
+    ```
+    parameters {
+    ...
+        real p_logit[N_VARIANTS];
+    ...
+    }
+    transformed parameters { // ORDER MATTERS!
+        real<lower=0,upper=1> p[N_VARIANTS]; // untransformed p
+        for(j in 1:N_VARIANTS)
+            p[j]=inv_logit(p_logit[j]);
+        ...
+   }
+   ```
+    
+8. `multiple2_merge_function_normal_qi.stan`
+    - Modification: Turn `qi` into normal distribution through logit transformation. 
+    ```
+    parameters {
+    ...
+        real qi_logit[N_VARIANTS,N_RNA];
+    ...
+    }
+    transformed parameters { // ORDER MATTERS!
+        real<lower=0,upper=1> qi[N_VARIANTS,N_RNA]; //untransformed qi
+        for(j in 1:N_VARIANTS){
+            for(i in 1:N_RNA){
+                qi[j,i] = inv_logit(qi_logit[j,i]);
+            }
+        }
+        ...
+   }
+   ```    
+9. `multiple2_merge_function_normal_theta.stan`
+    - Modification: Turn `theta` into normal distribution through log transformation. 
+    ```
+    parameters {
+    ...
+        real theta_log[N_VARIANTS];
+    ...
+    }
+    transformed parameters { // ORDER MATTERS!
+        real<lower=0> theta[N_VARIANTS];
+        for(j in 1:N_VARIANTS){
+            theta[j]=exp(theta_log[j]);
+    ...
+   }
+   ```
+10.`multiple2_merge_function_normal_p_qi.stan`
+    - Combine 7. and 8. together. 
+  
+11.`multiple2_merge_function_normal3.stan`
+    - Modification: Turn `qi`,`p` and `theta` into normal distribution through logit and log transformation. Combine 7,8,9 together. 
     ```
     parameters {
     ...
