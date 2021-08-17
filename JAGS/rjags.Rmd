@@ -1,0 +1,274 @@
+---
+title: "rjags"
+output: html_document
+---
+
+#Packages
+```{r}
+library(rjags)
+library(R2jags)
+library(runjags)
+library(tidyverse)
+library(matrixStats)
+library(ROCit)
+```
+
+# Example
+```{r}
+model.file <- system.file(package = "R2jags", "model", "schools.txt")
+J <- 8.0
+y <- c(28.4,7.9,-2.8,6.8,-0.6,0.6,18.0,12.2)
+sd <- c(14.9,10.2,16.3,11.0,9.4,11.4,10.4,17.6)
+
+jags.data <- list("y","sd","J")
+jags.params <- c("mu","sigma","theta")
+jags.inits <- function(){list("mu"=rnorm(1),"sigma"=runif(1),"theta"=rnorm(J))}
+
+jagsfit <- jags(data=list("y","sd","J"), inits = jags.inits,jags.params, n.iter = 10, model.file = model.file)
+
+jagsfit
+```
+
+
+
+# BIRD model
+```{r}
+bird <- "model{
+for(j in 1:N_VARIANTS){
+  p[j] ~ dbeta(v[j]*(c2-2)+1, (1-v[j])*(c2-2)+1)
+  theta[j] ~ dlnorm(0,s)
+  for (i in 1:N_RNA){
+    qi[j,i] ~ dbeta((theta[j]*p[j]/(1.0-p[j]+theta[j]*p[j]))*(c1-2)+1,(1-(theta[j]*p[j]/(1.0-p[j]+theta[j]*p[j])))*(c1-2)+1)
+    k[j,i]  ~ dbin(qi[j,i],kk[j,i]+m[j,i])
+    }
+  for (i in 1:N_DNA){
+    a[j,i]  ~ dbin(p[j],aa[j,i]+b[j,i])
+    }
+  }
+  c1 ~ dgamma(1.1, 0.005)
+  c2 ~ dgamma(1.1, 0.005)
+  s  ~ dgamma(1.1,3)
+}"
+
+cat("model{
+for(j in 1:N_VARIANTS){
+  p[j] ~ dbeta(v[j]*(c2-2)+1, (1-v[j])*(c2-2)+1)
+  theta[j] ~ dlnorm(0,s)
+  for (i in 1:N_RNA){
+    qi[j,i] ~ dbeta((theta[j]*p[j]/(1.0-p[j]+theta[j]*p[j]))*(c1-2)+1,(1-(theta[j]*p[j]/(1.0-p[j]+theta[j]*p[j])))*(c1-2)+1)
+    k[j,i]  ~ dbin(qi[j,i],kk[j,i]+m[j,i])
+    }
+  for (i in 1:N_DNA){
+    a[j,i]  ~ dbin(p[j],aa[j,i]+b[j,i])
+    }
+  }
+  c1 ~ dgamma(1.1, 0.005)
+  c2 ~ dgamma(1.1, 0.005)
+  s  ~ dgamma(1.1,3)
+}", file="BIRD.txt")
+
+```
+
+#Data
+```{r}
+rawdata <- read.csv("/Users/sean00002/Dropbox/PhD/Andrew_Rotation/STANINPUTS/2_data_0.01_1000_read5050.txt", sep = "\t", header = F)
+
+bird_data_001_50 <- list(v = rawdata$V1, a = matrix(rawdata$V7),aa = matrix(rawdata$V7), b = matrix(rawdata$V6), k = cbind(rawdata$V10, rawdata$V12,rawdata$V14,rawdata$V16,rawdata$V18,rawdata$V20,rawdata$V22,rawdata$V24,rawdata$V26,rawdata$V28),kk  = cbind(rawdata$V10, rawdata$V12,rawdata$V14,rawdata$V16,rawdata$V18,rawdata$V20,rawdata$V22,rawdata$V24,rawdata$V26,rawdata$V28), m = cbind(rawdata$V9, rawdata$V11,rawdata$V13,rawdata$V15,rawdata$V17,rawdata$V19,rawdata$V21,rawdata$V23,rawdata$V25,rawdata$V27), N_VARIANTS = nrow(rawdata), N_RNA=10,N_DNA=1)
+
+rawdata <- read.csv("/Users/sean00002/Dropbox/PhD/Andrew_Rotation/STANINPUTS/2_data_0.01_1000_read3030.txt", sep = "\t", header = F)
+
+bird_data_001_30 <- list(v = rawdata$V1, a = matrix(rawdata$V7),aa = matrix(rawdata$V7), b = matrix(rawdata$V6), k = cbind(rawdata$V10, rawdata$V12,rawdata$V14,rawdata$V16,rawdata$V18,rawdata$V20,rawdata$V22,rawdata$V24,rawdata$V26,rawdata$V28),kk  = cbind(rawdata$V10, rawdata$V12,rawdata$V14,rawdata$V16,rawdata$V18,rawdata$V20,rawdata$V22,rawdata$V24,rawdata$V26,rawdata$V28), m = cbind(rawdata$V9, rawdata$V11,rawdata$V13,rawdata$V15,rawdata$V17,rawdata$V19,rawdata$V21,rawdata$V23,rawdata$V25,rawdata$V27), N_VARIANTS = nrow(rawdata), N_RNA=10,N_DNA=1)
+
+rawdata <- read.csv("/Users/sean00002/Dropbox/PhD/Andrew_Rotation/STANINPUTS/2_data_0.05_1000_read5050.txt", sep = "\t", header = F)
+
+bird_data_005_50 <- list(v = rawdata$V1, a = matrix(rawdata$V7),aa = matrix(rawdata$V7), b = matrix(rawdata$V6), k = cbind(rawdata$V10, rawdata$V12,rawdata$V14,rawdata$V16,rawdata$V18,rawdata$V20,rawdata$V22,rawdata$V24,rawdata$V26,rawdata$V28),kk  = cbind(rawdata$V10, rawdata$V12,rawdata$V14,rawdata$V16,rawdata$V18,rawdata$V20,rawdata$V22,rawdata$V24,rawdata$V26,rawdata$V28), m = cbind(rawdata$V9, rawdata$V11,rawdata$V13,rawdata$V15,rawdata$V17,rawdata$V19,rawdata$V21,rawdata$V23,rawdata$V25,rawdata$V27), N_VARIANTS = nrow(rawdata), N_RNA=10,N_DNA=1)
+
+rawdata <- read.csv("/Users/sean00002/Dropbox/PhD/Andrew_Rotation/STANINPUTS/2_data_0.05_1000_read3030.txt", sep = "\t", header = F)
+
+bird_data_005_30 <- list(v = rawdata$V1, a = matrix(rawdata$V7),aa = matrix(rawdata$V7), b = matrix(rawdata$V6), k = cbind(rawdata$V10, rawdata$V12,rawdata$V14,rawdata$V16,rawdata$V18,rawdata$V20,rawdata$V22,rawdata$V24,rawdata$V26,rawdata$V28),kk  = cbind(rawdata$V10, rawdata$V12,rawdata$V14,rawdata$V16,rawdata$V18,rawdata$V20,rawdata$V22,rawdata$V24,rawdata$V26,rawdata$V28), m = cbind(rawdata$V9, rawdata$V11,rawdata$V13,rawdata$V15,rawdata$V17,rawdata$V19,rawdata$V21,rawdata$V23,rawdata$V25,rawdata$V27), N_VARIANTS = nrow(rawdata), N_RNA=10,N_DNA=1)
+
+rawdata <- read.csv("/Users/sean00002/Dropbox/PhD/Andrew_Rotation/STANINPUTS/2_data_1.0_1000_read3030.txt", sep = "\t", header = F)
+
+bird_data_30 <- list(v = rawdata$V1, a = matrix(rawdata$V7),aa = matrix(rawdata$V7), b = matrix(rawdata$V6), k = cbind(rawdata$V10, rawdata$V12,rawdata$V14,rawdata$V16,rawdata$V18,rawdata$V20,rawdata$V22,rawdata$V24,rawdata$V26,rawdata$V28),kk  = cbind(rawdata$V10, rawdata$V12,rawdata$V14,rawdata$V16,rawdata$V18,rawdata$V20,rawdata$V22,rawdata$V24,rawdata$V26,rawdata$V28), m = cbind(rawdata$V9, rawdata$V11,rawdata$V13,rawdata$V15,rawdata$V17,rawdata$V19,rawdata$V21,rawdata$V23,rawdata$V25,rawdata$V27), N_VARIANTS = nrow(rawdata), N_RNA=10,N_DNA=1)
+
+
+rawdata <- read.csv("/Users/sean00002/Dropbox/PhD/Andrew_Rotation/STANINPUTS/2_data_1.0_1000_read5050.txt", sep = "\t", header = F)
+
+bird_data_50 <- list(v = rawdata$V1, a = matrix(rawdata$V7),aa = matrix(rawdata$V7), b = matrix(rawdata$V6), k = cbind(rawdata$V10, rawdata$V12,rawdata$V14,rawdata$V16,rawdata$V18,rawdata$V20,rawdata$V22,rawdata$V24,rawdata$V26,rawdata$V28),kk  = cbind(rawdata$V10, rawdata$V12,rawdata$V14,rawdata$V16,rawdata$V18,rawdata$V20,rawdata$V22,rawdata$V24,rawdata$V26,rawdata$V28), m = cbind(rawdata$V9, rawdata$V11,rawdata$V13,rawdata$V15,rawdata$V17,rawdata$V19,rawdata$V21,rawdata$V23,rawdata$V25,rawdata$V27), N_VARIANTS = nrow(rawdata), N_RNA=10,N_DNA=1)
+```
+
+# runjags
+## Model_30 1000 variants with theta=2, DNA depth = RNA depth = 30
+```{r}
+ptm <- proc.time()
+model_30 <- run.jags(
+    model=bird, 
+    monitor=c("theta"), 
+    data=bird_data_30,n.chains = 4, burnin = 1000, sample=1000,method = 'parallel'
+)
+proc.time() - ptm 
+```
+
+## Model_30 Results
+```{r}
+mcmc <- as.mcmc(model_30)
+mcmc <- as.matrix(mcmc)
+medians = colMedians(mcmc)
+ggplot(data = as.data.frame(medians), aes(x = medians)) + geom_histogram(aes(y = ..density..)) + geom_density() + geom_vline(xintercept = median.default(medians))  + ggtitle(paste("median = ",median.default(medians)))
+```
+
+## Model_50 1000 variants with theta=2, DNA depth = RNA depth = 50
+```{r}
+ptm <- proc.time()
+model_50 <- run.jags(
+    model=bird, 
+    monitor=c("theta"), 
+    data=bird_data_50,n.chains = 4, burnin = 1000, sample=1000,method = 'parallel'
+)
+proc.time() - ptm 
+```
+
+## Model_50 results
+```{r}
+mcmc <- as.mcmc(model_50)
+mcmc <- as.matrix(mcmc)
+medians = colMedians(mcmc)
+ggplot(data = as.data.frame(medians), aes(x = medians)) + geom_histogram(aes(y = ..density..)) + geom_density() + geom_vline(xintercept = median.default(medians))  + ggtitle(paste("median = ",median.default(medians)))
+```
+
+
+## model_001_50:10 variants out of 1000 with theta=2, 990 variants out of 1000 with theta=1, DNA depth = RNA depth = 50
+```{r}
+ptm <- proc.time()
+model_001_50 <- run.jags(
+    model=bird, 
+    monitor=c("theta"), 
+    data=bird_data_001_50,n.chains = 4, burnin = 1000, sample=1000,method = 'parallel'
+)
+proc.time() - ptm 
+```
+## Model_001_50 results 
+```{r}
+mcmc <- as.mcmc(model_001_50)
+mcmc <- as.matrix(mcmc)
+medians = colMedians(mcmc)
+
+pos = 10
+label = c(rep(1,pos), rep(0,1000-pos))
+
+p <- c()
+for (i in 1:1000){
+  preg <- sum(mcmc[,i] > 1)/4000
+  p <- append(p,preg)
+}
+
+ROCit_obj <- rocit(score=p,class=label,method = "empirical")
+plot(ROCit_obj)
+title(main = paste0("JAGS:Model_001_50; ",summary(ROCit_obj)[4,]))
+
+```
+
+
+## model_001_30  10 variants out of 1000 with theta=2, 990 variants out of 1000 with theta=1, DNA depth = RNA depth = 30
+```{r}
+ptm <- proc.time()
+model_001_30 <- run.jags(
+    model=bird, 
+    monitor=c("theta"), 
+    data=bird_data_001_30,n.chains = 4, burnin = 1000, sample=1000,method = 'parallel'
+)
+proc.time() - ptm 
+```
+
+## Model_001_30 results 
+```{r}
+mcmc <- as.mcmc(model_001_30)
+mcmc <- as.matrix(mcmc)
+medians = colMedians(mcmc)
+
+pos = 10
+label = c(rep(1,pos), rep(0,1000-pos))
+
+p <- c()
+for (i in 1:1000){
+  preg <- sum(mcmc[,i] > 1)/4000
+  p <- append(p,preg)
+}
+
+ROCit_obj <- rocit(score=p,class=label,method = "empirical")
+plot(ROCit_obj)
+title(main = paste0("JAGS:model_001_30; ",summary(ROCit_obj)[4,]))
+
+```
+
+## model_005_50  50 variants out of 1000 with theta=2, 950 variants out of 1000 with theta=1, DNA depth = RNA depth = 50
+```{r}
+ptm <- proc.time()
+model_005_50 <- run.jags(
+    model=bird, 
+    monitor=c("theta"), 
+    data=bird_data_005_50,n.chains = 4, burnin = 1000, sample=1000,method = 'parallel'
+)
+proc.time() - ptm 
+
+
+```
+
+## model_005_50 results 
+```{r}
+mcmc <- as.mcmc(model_005_50)
+mcmc <- as.matrix(mcmc)
+medians = colMedians(mcmc)
+
+pos = 50
+label = c(rep(1,pos), rep(0,1000-pos))
+
+p <- c()
+for (i in 1:1000){
+  preg <- sum(mcmc[,i] > 1)/4000
+  p <- append(p,preg)
+}
+
+ROCit_obj <- rocit(score=p,class=label,method = "empirical")
+plot(ROCit_obj)
+title(main = paste0("JAGS:model_005_50; ",summary(ROCit_obj)[4,]))
+
+```
+
+
+## model_005_30  50 variants out of 1000 with theta=2, 950 variants out of 1000 with theta=1, DNA depth = RNA depth = 30
+```{r}
+ptm <- proc.time()
+model_005_30 <- run.jags(
+    model=bird, 
+    monitor=c("theta"), 
+    data=bird_data_005_30,n.chains = 4, burnin = 1000, sample=1000,method = 'parallel'
+)
+proc.time() - ptm 
+```
+
+## model_005_30 results 
+```{r}
+mcmc <- as.mcmc(model_005_30)
+mcmc <- as.matrix(mcmc)
+medians = colMedians(mcmc)
+
+pos = 50
+label = c(rep(1,pos), rep(0,1000-pos))
+
+p <- c()
+for (i in 1:1000){
+  preg <- sum(mcmc[,i] > 1)/4000
+  p <- append(p,preg)
+}
+
+ROCit_obj <- rocit(score=p,class=label,method = "empirical")
+plot(ROCit_obj) 
+title(main = paste0("JAGS:model_005_30; ",summary(ROCit_obj)[4,]))
+```
+
+
+
+
+
+

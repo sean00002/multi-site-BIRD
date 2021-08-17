@@ -1,0 +1,16 @@
+model{
+for(j in 1:N_VARIANTS){
+  p[j] ~ dbeta(v[j]*(c2-2)+1, (1-v[j])*(c2-2)+1)
+  theta[j] ~ dlnorm(0,s)
+  for (i in 1:N_RNA){
+    qi[j,i] ~ dbeta((theta[j]*p[j]/(1.0-p[j]+theta[j]*p[j]))*(c1-2)+1,(1-(theta[j]*p[j]/(1.0-p[j]+theta[j]*p[j])))*(c1-2)+1)
+    k[j,i]  ~ dbin(qi[j,i],kk[j,i]+m[j,i])
+    }
+  for (i in 1:N_DNA){
+    a[j,i]  ~ dbin(p[j],aa[j,i]+b[j,i])
+    }
+  }
+  c1 ~ dgamma(1.1, 0.005)
+  c2 ~ dgamma(1.1, 0.005)
+  s  ~ dgamma(1.1,3)
+}
