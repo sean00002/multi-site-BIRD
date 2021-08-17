@@ -1,4 +1,9 @@
 # multi-site-BIRD
+
+## Requirments:
+1. Please download and extract STANINPUTS.tar.gz and STANOUTPUTS.tar.gz from https://prodduke-my.sharepoint.com/:u:/g/personal/sl548_duke_edu/ET0c_cDRkzVDnT7vFbTgwQ0BC4fq9cNGR4WSI-fKhbaE4w?e=P03Tv9 and https://prodduke-my.sharepoint.com/:u:/g/personal/sl548_duke_edu/EXhZBSp7HwBHiofY9Xd3KlEBUWcZ9f_7G95aRlZKMBIQTQ?e=wHByU3. 
+2. Please download cmdstan-2.27.0 from https://github.com/stan-dev/cmdstan/releases 
+
 ## cmdStan: Multi-site BIRD model and its other derived models.
 1. `multiple2.stan` 
     - The originla multi-site BIRD model 
